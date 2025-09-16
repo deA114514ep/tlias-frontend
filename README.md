@@ -13,7 +13,7 @@
 - **路由**: Vue Router 4
 - **HTTP客户端**: Axios
 - **CSS预处理器**: SCSS
-- **Node版本**: Node.js 16+
+- **Node版本**: Node.js 18+
 
 ## 项目结构
 
@@ -49,8 +49,8 @@ tlias-frontend/
 
 ### 环境要求
 
-- Node.js 16+
-- npm 8+ 或 yarn 1.22+
+- Node.js 18+
+- npm 9+ 或 yarn 1.22+
 
 ### 安装步骤
 
@@ -115,8 +115,4 @@ tlias-frontend/
 
 ## 贡献
 
-欢迎提交Issue和Pull Request来改进项目。
-
-## 许可证
-
-MIT License
+初学者项目, 欢迎指正
