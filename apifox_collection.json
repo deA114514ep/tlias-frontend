@@ -1,0 +1,405 @@
+{
+  "info": {
+    "name": "Tlias员工管理系统API测试",
+    "description": "Tlias后端API接口测试集合",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "认证模块",
+      "item": [
+        {
+          "name": "用户登录",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"登录接口测试\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.response.to.be.json;",
+                  "    ",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('code');",
+                  "    pm.expect(jsonData).to.have.property('msg');",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    ",
+                  "    if (jsonData.code === 1) {",
+                  "        pm.environment.set(\"token\", jsonData.data.token);",
+                  "        pm.environment.set(\"userId\", jsonData.data.id);",
+                  "        pm.environment.set(\"userName\", jsonData.data.name);",
+                  "        console.log(\"登录成功，Token已保存\");",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "员工管理",
+      "item": [
+        {
+          "name": "查询员工列表",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "token",
+                "value": "{{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emps?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["emps"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"员工列表查询测试\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.response.to.be.json;",
+                  "    ",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('code');",
+                  "    pm.expect(jsonData).to.have.property('msg');",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    ",
+                  "    if (jsonData.code === 1) {",
+                  "        pm.expect(jsonData.data).to.have.property('total');",
+                  "        pm.expect(jsonData.data).to.have.property('rows');",
+                  "        console.log(\"员工总数:\", jsonData.data.total);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "添加员工",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "token",
+                "value": "{{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"测试员工\",\n  \"gender\": \"男\",\n  \"image\": \"https://example.com/avatar.jpg\",\n  \"job\": 1,\n  \"entryDate\": \"2024-01-01\",\n  \"deptId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/emps",
+              "host": ["{{baseUrl}}"],
+              "path": ["emps"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"添加员工测试\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.response.to.be.json;",
+                  "    ",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('code');",
+                  "    pm.expect(jsonData).to.have.property('msg');",
+                  "    ",
+                  "    if (jsonData.code === 1) {",
+                  "        console.log(\"员工添加成功\");",
+                  "    } else {",
+                  "        console.log(\"员工添加失败:\", jsonData.msg);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "学生管理",
+      "item": [
+        {
+          "name": "查询学生列表",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "token",
+                "value": "{{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["students"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"学生列表查询测试\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.response.to.be.json;",
+                  "    ",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('code');",
+                  "    pm.expect(jsonData).to.have.property('msg');",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    ",
+                  "    if (jsonData.code === 1) {",
+                  "        pm.expect(jsonData.data).to.have.property('total');",
+                  "        pm.expect(jsonData.data).to.have.property('rows');",
+                  "        console.log(\"学生总数:\", jsonData.data.total);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "班级管理",
+      "item": [
+        {
+          "name": "查询班级列表",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "token",
+                "value": "{{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clazzs?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["clazzs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"班级列表查询测试\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.response.to.be.json;",
+                  "    ",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('code');",
+                  "    pm.expect(jsonData).to.have.property('msg');",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    ",
+                  "    if (jsonData.code === 1) {",
+                  "        pm.expect(jsonData.data).to.have.property('total');",
+                  "        pm.expect(jsonData.data).to.have.property('rows');",
+                  "        console.log(\"班级总数:\", jsonData.data.total);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "日志管理",
+      "item": [
+        {
+          "name": "查询日志列表",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "token",
+                "value": "{{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/log/page?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["log", "page"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"日志列表查询测试\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.response.to.be.json;",
+                  "    ",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('code');",
+                  "    pm.expect(jsonData).to.have.property('msg');",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    ",
+                  "    if (jsonData.code === 1) {",
+                  "        pm.expect(jsonData.data).to.have.property('total');",
+                  "        pm.expect(jsonData.data).to.have.property('rows');",
+                  "        console.log(\"日志总数:\", jsonData.data.total);",
+                  "        console.log(\"日志记录:\", jsonData.data.rows);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// 设置请求头",
+          "pm.request.headers.add({",
+          "    key: 'Accept',",
+          "    value: 'application/json'",
+          "});"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// 通用测试脚本",
+          "pm.test(\"响应格式是JSON\", function () {",
+          "    pm.response.to.be.json;",
+          "});",
+          "",
+          "pm.test(\"响应状态码是200\", function () {",
+          "    pm.response.to.have.status(200);",
+          "});",
+          "",
+          "pm.test(\"响应包含必要字段\", function () {",
+          "    const jsonData = pm.response.json();",
+          "    pm.expect(jsonData).to.have.property('code');",
+          "    pm.expect(jsonData).to.have.property('msg');",
+          "    pm.expect(jsonData.code).to.be.oneOf([0, 1]);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "userName",
+      "value": ""
+    }
+  ]
+}
